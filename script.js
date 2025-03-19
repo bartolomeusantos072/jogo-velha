@@ -1,42 +1,73 @@
-// Recuperando o placar de sessão ou inicializando
-let placar = JSON.parse(sessionStorage.getItem('placar')) || { jogador1: 0, jogador2: 0 };
+let vezJogador = 'X'; // Começa com o jogador X
+let tabuleiro = ['', '', '', '', '', '', '', '', '']; // Tabuleiro vazio
+let jogoAtivo = true; // O jogo começa ativo
+let placar = JSON.parse(sessionStorage.getItem('placar')) || { jogador1: 0, jogador2: 0 }; // Carrega o placar ou inicia com 0
 
-// Armazenando a posição atual do tabuleiro e a vez do jogador
-let tabuleiro = ['', '', '', '', '', '', '', '', '']; // O tabuleiro começa vazio
-let vezJogador = 'X'; // Jogador 'X' começa
-let jogoAtivo = true; // Variável para verificar se o jogo está em andamento
+const botoes = document.querySelectorAll('button[data-pos]');
+const placarElementos = document.querySelectorAll('.placar span');
 
-// Atualiza o placar na tela
+// Função para atualizar o placar
 function atualizarPlacar() {
-    document.querySelector('.jogador1 span').textContent = placar.jogador1;
-    document.querySelector('.jogador2 span').textContent = placar.jogador2;
+    placarElementos[0].textContent = placar.jogador1;
+    placarElementos[1].textContent = placar.jogador2;
+    sessionStorage.setItem('placar', JSON.stringify(placar)); // Salva o placar no sessionStorage
 }
 
-// Verifica se alguém venceu
+// Função para desabilitar os botões após o fim do jogo
+function desabilitarBotoes() {
+    botoes.forEach(botao => {
+        botao.disabled = true;
+    });
+}
+
+// Função para habilitar os botões novamente
+function habilitarBotoes() {
+    botoes.forEach(botao => {
+        botao.disabled = false;
+    });
+}
+
+// Função para reiniciar o jogo sem resetar o placar
+function reiniciarJogo() {
+    tabuleiro = ['', '', '', '', '', '', '', '', '']; // Limpa o tabuleiro
+    vezJogador = 'X'; // Reseta a vez do jogador para 'X'
+    jogoAtivo = true; // O jogo volta a estar ativo
+
+    // Limpa os botões (remover texto de 'X' e 'O')
+    botoes.forEach(botao => {
+        botao.textContent = '';
+    });
+
+    habilitarBotoes(); // Habilita os botões novamente
+}
+
+// Função para verificar se há uma vitória
 function verificarVitoria() {
     const combinacoes = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
-        [0, 4, 8], [2, 4, 6]             // Diagonais
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
     ];
 
-    // Verifica todas as combinações de vitória
-    for (let combinacao of combinacoes) {
-        const [a, b, c] = combinacao;
+    for (let i = 0; i < combinacoes.length; i++) {
+        const [a, b, c] = combinacoes[i];
         if (tabuleiro[a] && tabuleiro[a] === tabuleiro[b] && tabuleiro[a] === tabuleiro[c]) {
-            return tabuleiro[a]; // Retorna o vencedor ('X' ou 'O')
+            // Se há uma vitória
+            return tabuleiro[a]; // Retorna 'X' ou 'O'
         }
     }
-    // Verifica se houve empate (se todas as células estiverem preenchidas)
-    if (!tabuleiro.includes('')) {
-        return 'empate';
-    }
-    return null; // Jogo continua
+
+    return tabuleiro.includes('') ? null : 'empate'; // Se não houver vitória e não houver mais espaços, é empate
 }
 
-// Atualiza o estado da célula (botão)
+// Função para fazer uma jogada
 function jogar(posicao) {
-    if (tabuleiro[posicao] || !jogoAtivo) return; // Se já houver algo ou se o jogo terminou, nada acontece
+    if (tabuleiro[posicao] || !jogoAtivo) return; // Se a célula já estiver preenchida ou o jogo estiver terminado, nada acontece
 
     tabuleiro[posicao] = vezJogador;
     document.querySelector(`button[data-pos='${posicao}']`).textContent = vezJogador;
@@ -49,28 +80,36 @@ function jogar(posicao) {
             placar.jogador1++;
         } else if (resultado === 'O') {
             placar.jogador2++;
-        }
-        if (resultado === 'empate') {
-            alert("Empate!");
         } else {
-            alert(`${resultado} venceu!`);
+            // Se houver empate
+            placar.jogador1++;
+            placar.jogador2++;
         }
         sessionStorage.setItem('placar', JSON.stringify(placar)); // Atualiza o placar no sessionStorage
-        atualizarPlacar();
+        atualizarPlacar(); // Atualiza o placar na interface
+        desabilitarBotoes(); // Desabilita os botões
+        
+        // Exibe a caixa de diálogo perguntando se o jogador quer jogar novamente
+        if (window.confirm('O jogo terminou! Quer jogar novamente?')) {
+            reiniciarJogo(); // Reinicia a partida sem alterar o placar
+        }
         return;
     }
 
-    // Alterna o jogador
+    // Alterna entre os jogadores
     vezJogador = vezJogador === 'X' ? 'O' : 'X';
 }
 
-// Adiciona os eventos de clique nos botões
-document.querySelectorAll('button[data-pos]').forEach(button => {
-    button.addEventListener('click', () => {
-        const posicao = button.getAttribute('data-pos');
+// Adiciona o evento de clique para cada botão do tabuleiro
+botoes.forEach(botao => {
+    botao.addEventListener('click', (e) => {
+        const posicao = e.target.dataset.pos;
         jogar(posicao);
     });
 });
 
-// Inicializa o placar
+// Adiciona o evento para o botão de reiniciar
+document.getElementById('reiniciar').addEventListener('click', reiniciarJogo);
+
+// Inicializa o placar na interface
 atualizarPlacar();
