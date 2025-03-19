@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Jogo da Velha</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>Jogo da Velha</h1>
         <div class="placar">
-            <p>Jogador1:<span></span></p>
-            <p>Jogador2:<span></span></p>
+            <!-- Corrigido para manter o padrão no nome das classes -->
+            <p class="jogador1">Jogador 1: <span>0</span></p>
+            <p class="jogador2">Jogador 2: <span>0</span></p>
         </div>
     </header>
     <main>
-        <button data-pos="0"></button>
-        <button data-pos="1"></button>
-        <button data-pos="2"></button>
-        <button data-pos="3"></button>
-        <button data-pos="4"></button>
-        <button data-pos="5"></button>
-        <button data-pos="6"></button>
-        <button data-pos="7"></button>
-        <button data-pos="8"></button>
+        <!-- Botões com data-pos para indicar a posição no tabuleiro -->
+        <div class="tabuleiro">
+            <button class="celula" data-pos="0"></button>
+            <button class="celula" data-pos="1"></button>
+            <button class="celula" data-pos="2"></button>
+            <button class="celula" data-pos="3"></button>
+            <button class="celula" data-pos="4"></button>
+            <button class="celula" data-pos="5"></button>
+            <button class="celula" data-pos="6"></button>
+            <button class="celula" data-pos="7"></button>
+            <button class="celula" data-pos="8"></button>
+        </div>
     </main>
     <script type="module" src="script.js"></script>
 </body>
