@@ -10,25 +10,26 @@
     <header>
         <h1>Jogo da Velha</h1>
         <div class="placar">
-            <!-- Corrigido para manter o padrão no nome das classes -->
-            <p class="jogador1">Jogador 1: <span>0</span></p>
-            <p class="jogador2">Jogador 2: <span>0</span></p>
+            <p class="jogador1">Jogador1: <span>0</span></p>
+            <p class="jogador2">Jogador2: <span>0</span></p>
         </div>
+        <!-- Botão para reiniciar a partida -->
+        
     </header>
     <main>
-        <!-- Botões com data-pos para indicar a posição no tabuleiro -->
-        <div class="tabuleiro">
-            <button class="celula" data-pos="0"></button>
-            <button class="celula" data-pos="1"></button>
-            <button class="celula" data-pos="2"></button>
-            <button class="celula" data-pos="3"></button>
-            <button class="celula" data-pos="4"></button>
-            <button class="celula" data-pos="5"></button>
-            <button class="celula" data-pos="6"></button>
-            <button class="celula" data-pos="7"></button>
-            <button class="celula" data-pos="8"></button>
-        </div>
+        <button data-pos="0"></button>
+        <button data-pos="1"></button>
+        <button data-pos="2"></button>
+        <button data-pos="3"></button>
+        <button data-pos="4"></button>
+        <button data-pos="5"></button>
+        <button data-pos="6"></button>
+        <button data-pos="7"></button>
+        <button data-pos="8"></button>
     </main>
+    <footer>
+        <button id="reiniciar">Reiniciar Partida</button>
+    </footer>
     <script type="module" src="script.js"></script>
 </body>
 </html>
